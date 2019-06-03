@@ -1,0 +1,11 @@
+/**
+ * 如何使用 vue 的 render 方法以及 vue 也可以支持写 jsx 的代码
+ */
+{
+    "presets": [
+        "env"
+    ],
+    "plugins": [
+        "transform-vue-jsx"
+    ]
+}

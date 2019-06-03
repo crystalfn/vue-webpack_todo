@@ -52,6 +52,13 @@ const config = {
                 loader: 'vue-loader'
             },
             /**
+             * 对于 .jsx 的文件使用 babel-loader 进行操作
+             */
+            {
+                test: /\.jsx$/,
+                loader: 'babel-loader'
+            },
+            /**
              * 加载 css , 配置 loader,
              * css-loader 只是帮我们处理了 css 文件，
              * 在前端项目运行时 css 是要作为一个外部文件处理的，
@@ -76,14 +83,19 @@ const config = {
              * 我们使用的预处理器也是可以通过 webpack 来处理打包的；
              * stylus-loader: 是专门处理 stylus 文件的，它处理完之后是 css 内容；
              * css 内容由上一级 css-loader 来处理；
-             * webpack 的 loader 就是一层一层往上扔的，每一个 loader 只处理它关心的那一部分；
-             * 
+             * webpack 的 loader 就是一层一层往上扔的，每一个 loader 只处理它关心的那一部分
              */
             {
                 test: /\.styl/,
                 use: [
                     'style-loader',
                     'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap: true,
+                        }
+                    },
                     'stylus-loader'
                 ]
             },
