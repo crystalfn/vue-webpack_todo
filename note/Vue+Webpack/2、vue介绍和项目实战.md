@@ -76,3 +76,12 @@ module.exports = {
     ]
 },
 ```
+
+# 三、实现 todo 应用的界面
+- 实现页面从 app.vue 文件开始入手；
+- 在 src 下新建 todo 文件夹，在里面放 todo 应用；
+- 将整个 todo 应用分成三个部分：header.vue、todo.vue、footer.jsx，再将 todo.vue 细分为 tabs.vue、item.vue;
+- 在 styles 文件夹中新建一些样式文件，作为全局、局部的样式，引用的时候只需要引用就可以了，全局的样式在 index.js 中引用，局部的样式在某一块儿中引用，引用了之后样式才会生效;
+- vue 的组件必须要有一个独立的外部节点，不能在 template 下有两个并列的节点，这样是会报错的；
+- 将 todo 应用的三个部分放到 app.vue 中（详细见 app.vue）；
+- 分别实现三个部分：header.vue、todo.vue、footer.jsx（详细见代码）；
