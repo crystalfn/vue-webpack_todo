@@ -11,6 +11,11 @@ const HTMLPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 /**
+ * extract-text-webpack-plugin: 帮助我们将非 js 文件单独打包成一个静态资源文件
+ */
+const ExtractPlugin = require('extract-text-webpack-plugin');
+
+/**
  * 设置变量 isDev 来判断是否为开发环境，
  * 我们在启动脚本的时候设置的环境变量全部是存在 process.env 对象里面的，
  * 所以可以设置很多的变量然后通过 process.env 读到变量。
@@ -39,7 +44,7 @@ const config = {
      * 并且打包出来的是能够在浏览器直接运行的 js 代码。
      */
     output: {
-        filename: 'bundle.js',
+        filename: 'bundle.[hash:8].js',
         path: path.join(__dirname, "dist"),
     },
     /**
@@ -70,14 +75,16 @@ const config = {
              * css-loader：从 css 文件中将内容读出来，
              * style-loader：将读出的内容写到 html 里面，
              * 这样我们写好的 css 最终会在 ts 中以一段 js 代码出现，js 代码的作用就是帮我们把 css 写到 html 中去
+             * 
+             * 我们用的 stylus，所以这里可以去掉
              */
-            {
-                test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
-            },
+            // {
+            //     test: /\.css$/,
+            //     use: [
+            //         'style-loader',
+            //         'css-loader'
+            //     ]
+            // },
             /**
              * css 预处理器：stylus
              * 使用模块化的方式去写 css 代码，原生的 css 的功能比较小；
@@ -85,21 +92,23 @@ const config = {
              * stylus-loader: 是专门处理 stylus 文件的，它处理完之后是 css 内容；
              * css 内容由上一级 css-loader 来处理；
              * webpack 的 loader 就是一层一层往上扔的，每一个 loader 只处理它关心的那一部分
+             * 
+             * 根据环境来加
              */
-            {
-                test: /\.styl/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            sourceMap: true,
-                        }
-                    },
-                    'stylus-loader'
-                ]
-            },
+            // {
+            //     test: /\.styl/,
+            //     use: [
+            //         'style-loader',
+            //         'css-loader',
+            //         {
+            //             loader: 'postcss-loader',
+            //             options: {
+            //                 sourceMap: true,
+            //             }
+            //         },
+            //         'stylus-loader'
+            //     ]
+            // },
             /**
              * 以加载 css 为例，加载图片以类似的方式
              * use 数组中使用对象来写，因为 loader 是可以配置选项的，每一个 loader 都有一些选项可以配置，
@@ -172,6 +181,23 @@ const config = {
  */
 if(isDev) {
     /**
+     * 开发环境中我们就是这样用的，直接 push 进去就好
+     */
+    config.module.rules.push({
+        test: /\.styl/,
+        use: [
+            'style-loader',
+            'css-loader',
+            {
+                loader: 'postcss-loader',
+                options: {
+                    sourceMap: true,
+                }
+            },
+            'stylus-loader'
+        ]
+    })
+    /**
      * devtool：帮助我们在页面上调试代码
      * 因为我们使用的都是 .vue 文件的开发模式，而且我们写的都是 ES6 的代码，这些代码在浏览器中是不能运行的，
      * 所以我们如果直接在浏览器中去调试代码，这些代码都是经过编译的，我们自己都看不懂
@@ -190,6 +216,48 @@ if(isDev) {
     config.plugins.push(
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
+    )
+} else {
+    /**
+     * 单独打包类库代码
+     */
+    config.entry = {
+        app: path.join(__dirname, 'src/index.js'),
+        vendor: ['vue']
+    }
+
+    config.output.filename = '[name].[chunkhash:8].js';
+    /**
+     * 在正式环境中，我们需要把 css 文件单独打包，而不是放在 js 文件中
+     * 所以我们将 'style-loader' 从 use 剔除出来，同时将 css 文件单独打包返回
+     */
+    config.module.rules.push({
+        test: /\.styl/,
+        use: ExtractPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+                'css-loader',
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        sourceMap: true,
+                    }
+                },
+                'stylus-loader'
+            ]
+        })
+    })
+    /**
+     * 指定静态文件输出的名字
+     */
+    config.plugins.push(
+        new ExtractPlugin('styles.[contentHash:8].css'),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor'
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'runtime'
+        })
     )
 }
 
