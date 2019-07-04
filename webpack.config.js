@@ -5,6 +5,7 @@ const path = require('path');
 
 /**
  * 引入安装的 html-webpack-plugin 组件
+ * 引入 webpack
  */
 const HTMLPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
@@ -135,6 +136,7 @@ const config = {
      * 这些功能在正式环境中是没有必要的，它不仅会加大文件的大小，还会降低运行速率。
      * 
      * 定义好了这个之后我们就可以启动 webpack-dev-server
+     * 调用的 webpack 插件是在 webpack 上的，所以需要引用 webpack
      */
     plugins: [
         new webpack.DefinePlugin({

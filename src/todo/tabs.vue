@@ -1,6 +1,9 @@
 <!-- 完成切换、清除功能 -->
 <template>
     <div class="helper">
+        <!-- 
+            通过父组件 todo.vue 传进来的 todos 数据的信息来 computed 出现在未完成的任务条数
+         -->
         <span class="left">{{unFinishedTodoLength}} items left</span>
         <span class="tabs">
             <!-- 
@@ -9,6 +12,8 @@
                 如果使用 key，在下一次循环的时候，如果 key 相同，那么就不会重新在生成一个节点，而是会复用这个节点
                 :class="[state, filter === state ? 'actived' : '']"：有选中和未选中的状态；
                 filter：通过父 -> 子 传过来的，用来判断此时的是否选择的状态
+
+                通过 toggleFilter 切换不同的状态改变显示的事件
              -->
             <span 
                 v-for="state in states" 
@@ -47,6 +52,12 @@ export default {
         }
     },
 
+    /**
+     * 使用计算属性来计算一下现在未完成的任务的条数
+     * 运用 filter() 方法，返回所有 !todo.completed 为 true 的项组成的数据
+     * 这里我们需要的是这个数组的长度
+     * 设置完成后我们就可以直接在 html 中使用 unFinishedTodoLength 来显示现在未完成的任务条数
+     */
     computed: {
         unFinishedTodoLength() {
             return this.todos.filter(todo => !todo.completed).length;
@@ -54,6 +65,9 @@ export default {
     },
 
     methods: {
+        /**
+         * 通过子组件触发父组件的 toggle 方法，同时传入此时要显示的事件的状态
+         */
         toggleFilter(state) {
             this.$emit('toggle', state);
         },

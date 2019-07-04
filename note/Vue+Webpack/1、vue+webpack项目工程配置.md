@@ -51,9 +51,9 @@ exports.push([module.i, "body {\r\n    color: red;\r\n    background-image: url(
 
 module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iLTEwIC0xOCAxMDAgMTM1Ij48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmRkYWQ1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBmaWxsPSIjNWRjMmFmIiBkPSJNNzIgMjVMNDIgNzEgMjcgNTZsLTQgNCAyMCAyMCAzNC01MnoiLz48L3N2Zz4="
 ```
-- css 预处理器：stylus，详细见 webpack.config.js 文件，注意安装 stylus-loader、stylus 包;；
+- css 预处理器：stylus，详细见 webpack.config.js 文件，注意安装 stylus-loader、stylus 包；
 - 可以在 styles 文件夹下新建 test.stylus.styl 文件，在里面书写样式；
-- 同样的在 index.js 中 import test.stylus.styl 文件，再进行打包，可以在 bundle.js 中找到在 test.stylus.styl 文件中设置的样式
+- 同样的在 index.js 中 import test-stylus.styl 文件，再进行打包，可以在 bundle.js 中找到在 test-stylus.styl 文件中设置的样式
 
 ```
 // module
@@ -71,7 +71,7 @@ webpack-dev-server 实际上是 webpack 的一个包，我们首先要安装这�
 
 2. 判断环境：
  * 由于我们的配置文件是要同时用在正式环境和开发环境的，所以我们的配置是要根据不同的环境去做一些判断的；
- * 如何判断：我们根据跑 npm run dev 的时候设置一个环境变量，来表示我们现在是开发环境还是正式环境；
+ * 如何判断：我们根据跑 npm run dev 的时候设置一个环境变量，来标识我们现在是开发环境还是正式环境；
  * 设置环境变量：安装包 cross-env，在不同的平台上设置环境变量的方式是不一样的，使用 cross-env 就可以统一设置（见 package.json 文件）;
  
 3. 设置判断的变量

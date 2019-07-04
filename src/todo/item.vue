@@ -34,6 +34,11 @@ export default {
     },
 
     methods: {
+        /**
+         * 触发删除方法，同时向父组件 todo.vue 传递要删除的事件的 id
+         * 通过 this.$emit('del', this.todo.id) 方法实现 父 -> 子 传输数据
+         * del: 通过子组件触发父组件的 del 事件，同时将执行该事件需要的数据传递出去
+         */
         deleteTodo() {
             this.$emit('del', this.todo.id);
         }
